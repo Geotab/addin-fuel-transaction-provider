@@ -1,0 +1,88 @@
+.app section {
+    overflow: auto
+}
+.app section:not(".alerts"){
+    margin-bottom: 2em;
+}
+
+.app .input-group {
+    display: inline-table;
+    vertical-align: middle
+}
+
+.app .input-group .input-group-addon, .app .input-group .input-group-btn, .app .input-group .form-control {
+    width: auto !important
+}
+
+.app .icon {
+    position: relative;
+    top: 2px;
+    display: inline-block;
+    line-height: 1;
+    width: 16px;
+    height: 16px;
+    float: none;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.app .icon-remove {
+    background-image: url("https://af323d1feb245d2a8ff926cf4ccba04e7a82d422-www.googledrive.com/host/0B2gIwKD5rJDcRElqdEtCWFQ1cHc/images/cross108.svg");
+}
+
+.app .spinner {
+    width: 50px;
+    height: 10px;
+    text-align: center;
+    font-size: 10px;
+    display: inline-block
+}
+
+.app .spinner > div {
+    background-color: #31708f;
+    height: 100%;
+    width: 3px;
+    display: inline-block;
+    -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+    animation: stretchdelay 1.2s infinite ease-in-out
+}
+
+.app .spinner .rect2 {
+    -webkit-animation-delay: -1.1s;
+    animation-delay: -1.1s
+}
+
+.app .spinner .rect3 {
+    -webkit-animation-delay: -1s;
+    animation-delay: -1s
+}
+
+.app .spinner .rect4 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s
+}
+
+.app .spinner .rect5 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s
+}
+
+@-webkit-keyframes stretchdelay {
+    0%, 40%, 100% {
+        -webkit-transform: scaleY(0.4)
+    }
+    20% {
+        -webkit-transform: scaleY(1)
+    }
+}
+
+@keyframes stretchdelay {
+    0%, 40%, 100% {
+        transform: scaleY(0.4);
+        -webkit-transform: scaleY(0.4)
+    }
+    20% {
+        transform: scaleY(1);
+        -webkit-transform: scaleY(1)
+    }
+}

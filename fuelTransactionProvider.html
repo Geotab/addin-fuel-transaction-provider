@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Fuel Transaction Provider (by Geotab)</title>
+    <link href="https://af323d1feb245d2a8ff926cf4ccba04e7a82d422-www.googledrive.com/host/0B2gIwKD5rJDcRElqdEtCWFQ1cHc/css/bootstrap.css" rel="stylesheet">
+    <link href="https://af323d1feb245d2a8ff926cf4ccba04e7a82d422-www.googledrive.com/host/0B2gIwKD5rJDcRElqdEtCWFQ1cHc/css/fuelTransactionProvider.css" rel="stylesheet">
+    <script type="text/javascript" src="https://af323d1feb245d2a8ff926cf4ccba04e7a82d422-www.googledrive.com/host/0B2gIwKD5rJDcRElqdEtCWFQ1cHc/js/fuelTransactionProvider.js"></script>
+</head>
+
+<body>
+
+<div id="fuelTransactionProviderId" class="app bootstrap" style="display: none">
+    <div class="container-fluid">
+
+        <section class="row">
+            <div class="col-sm-12">
+                <h1>Fuel Transaction Provider</h1>
+                <p>Save the customer id assigned by your fuel transaction provider to enable automated fuel transaction importing. Fuel transactions will be imported once per 24 hour period. <em>Fuel card provider account number should include leading zeros, no spaces or hyphens.</em></p>
+            </div>
+        </section>
+
+        <section class="row alerts">
+            <div class="col-sm-12">
+                <div id="dummy" style="visibility: hidden" class="alert alert-info">&nbsp;</div>
+                <div id="alertInfo" style="display: none;" class="alert alert-info">
+                    <div class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
+                    <span></span>
+                </div>
+                <div id="alertSuccess" style="display: none" class="alert alert-success"><span></span></div>
+                <div id="alertError" style="display: none" class="alert alert-error">Error: <span></span></div>
+            </div>
+        </section>
+
+        <section class="row" id="form">
+            <div class="col-sm-12 col-lg-8">
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" id="save" title="Save customer id">Save</button>
+                    <button type="reset" class="btn" id="reset" title="Reset">Reset</button>
+                </div>
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Customer Id</th>
+                        <th>Provider</th>
+                        <th>Last Imported</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody id="accountSettings">
+
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+<script type="text/html" id="accountSettingsTempl">
+        <tr class="accountSetting" id="<%=id%>">
+            <td><input type="text" class="form-control customerId" required="required" value="<%=customerId%>" placeholder="Customer Id" title="Fuel card provider account number (must include leading zeros, no spaces or hyphens)"></td>
+            <td>
+                <select class="form-control provider" disabled="disabled" title="The fuel card data provider">
+                    <option value="Unknown" <%= fuelTransactionProvider === 'Wex' ? 'selected="selected"' : '' %> >Unknown</option>
+                    <option value="Wex" <%= fuelTransactionProvider === 'Wex' ? 'selected="selected"' : '' %> >WEX</option>
+                </select>
+            </td>
+            <td><input type="text" class="form-control lastRun" disabled="disabled" value="<%=lastRun%>" placeholder="Never" title="The last imported file date (UTC)"></td>
+            <td><%= button === 'remove' ? '<button type="button" class="btn btn-default remove" aria-label="Left Align">
+                <span class="icon icon-remove" aria-hidden="true"></span>
+            </button>' : '&nbsp;' %></td>
+        </tr>
+</script>
+</body>
+</html>

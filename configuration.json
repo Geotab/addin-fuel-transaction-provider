@@ -1,0 +1,18 @@
+{
+    "supportEmail": "stevehansen@geotab.com",
+    "isSigned": false,
+    "signature": "12345-MYSIGNATURE",
+    "name": "Fuel Transaction Provider (by Geotab)",
+    "items": [
+        {
+            "icon": "https://af323d1feb245d2a8ff926cf4ccba04e7a82d422-www.googledrive.com/host/0B2gIwKD5rJDcRElqdEtCWFQ1cHc/images/icon.png",
+            "path": "EngineMaintenanceLink/",
+            "menuName": {
+                "en": "Fuel Transaction Provider"
+            },
+            "url": "https://af323d1feb245d2a8ff926cf4ccba04e7a82d422-www.googledrive.com/host/0B2gIwKD5rJDcRElqdEtCWFQ1cHc/fuelTransactionProvider.html"
+        }
+    ],
+    "version": "1.0",
+    "key": "12345-MYAPIKEY"
+}
