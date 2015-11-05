@@ -1,2 +1,26 @@
-# addin-fuel-transaction-provider
-A MyGeotab addin for associating a fuel card provider account to a MyGeotab database for automatic import.
+# Fuel Transaction Provider Addin
+
+Save the customer id assigned by your fuel transaction provider to enable automated fuel transaction importing. Fuel transactions will be imported once per 24 hour period. Fuel card provider must be supported by MyGeotab.
+
+### Installation
+Add the configuation below to the to the system setting -> addins section of the MyGeotab database
+```
+{
+    "supportEmail": "support@example.com",
+    "isSigned": false,
+    "signature": "12345-MYSIGNATURE",
+    "name": "Fuel Transaction Provider (by Geotab)",
+    "items": [
+        {
+            "icon": "https://cdn.rawgit.com/Geotab/addin-fuel-transaction-provider/master/images/icon.png",
+            "path": "EngineMaintenanceLink/",
+            "menuName": {
+                "en": "Fuel Transaction Provider"
+            },
+            "url": "https://cdn.rawgit.com/Geotab/addin-fuel-transaction-provider/master/fuelTransactionProvider.html"
+        }
+    ],
+    "version": "2.0",
+    "key": "12345-MYAPIKEY"
+}
+```
