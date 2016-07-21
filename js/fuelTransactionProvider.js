@@ -1,4 +1,4 @@
-geotab.addin.addinTemplate = function () {
+geotab.addin.addinTemplate = function() {
     "use strict";
 
     // Geotab Addin variables
@@ -22,8 +22,9 @@ geotab.addin.addinTemplate = function () {
     var systemSettings;
     var providerSettings;
     var isLegacy;
+    var hasMultipleProviderSupport;
 
-    var tmpl = (function () {
+    var tmpl = (function() {
         var cache = {};
 
         return function tmpl(str, data) {
@@ -31,39 +32,39 @@ geotab.addin.addinTemplate = function () {
             // load the template - and be sure to cache the result.
             var fn = !/\W/.test(str) ?
                 cache[str] = cache[str] ||
-                    tmpl(document.getElementById(str).innerHTML) :
+                tmpl(document.getElementById(str).innerHTML) :
 
                 // Generate a reusable function that will serve as a template
                 // generator (and which will be cached).
                 new Function("obj",
                     "var p=[],print=function(){p.push.apply(p,arguments);};" +
 
-                        // Introduce the data as local variables using with(){}
+                    // Introduce the data as local variables using with(){}
                     "with(obj){p.push('" +
 
-                        // Convert the template into pure JavaScript
+                    // Convert the template into pure JavaScript
                     str
-                        .replace(/[\r\t\n]/g, " ")
-                        .split("<%").join("\t")
-                        .replace(/((^|%>)[^\t]*)'/g, "$1\r")
-                        .replace(/\t=(.*?)%>/g, "',$1,'")
-                        .split("\t").join("');")
-                        .split("%>").join("p.push('")
-                        .split("\r").join("\\'")
-                    + "');}return p.join('');");
+                    .replace(/[\r\t\n]/g, " ")
+                    .split("<%").join("\t")
+                    .replace(/((^|%>)[^\t]*)'/g, "$1\r")
+                    .replace(/\t=(.*?)%>/g, "',$1,'")
+                    .split("\t").join("');")
+                    .split("%>").join("p.push('")
+                    .split("\r").join("\\'") +
+                    "');}return p.join('');");
 
             // Provide some basic currying to the user
             return data ? fn(data) : fn;
         };
     }());
 
-    var toggleVisible = function (el, show) {
+    var toggleVisible = function(el, show) {
         el.style.display = show ? "block" : "none";
     };
 
     var successTimer;
 
-    var toggleAlert = function (el, content) {
+    var toggleAlert = function(el, content) {
         clearTimeout(successTimer);
         elAlertDummy.style.display = "block";
         elAlertSuccess.style.display = "none";
@@ -76,19 +77,19 @@ geotab.addin.addinTemplate = function () {
         }
     };
 
-    var showSaveSuccess = function (callback) {
+    var showSaveSuccess = function(callback) {
         toggleAlert(elAlertSuccess, "Saved");
-        successTimer = setTimeout(function () {
+        successTimer = setTimeout(function() {
             toggleAlert();
             callback && callback();
         }, 3000);
     };
 
-    var clearFields = function () {
+    var clearFields = function() {
         elAccountSettings.innerHTML = "";
     };
 
-    var getEmptyProvider = function () {
+    var getEmptyProvider = function() {
         return {
             customerId: "",
             fuelTransactionProvider: "Unknown",
@@ -97,12 +98,12 @@ geotab.addin.addinTemplate = function () {
         };
     };
 
-    var focusOnLast = function () {
+    var focusOnLast = function() {
         var customerIds = document.querySelectorAll(".customerId");
         customerIds[customerIds.length - 1].focus();
     };
 
-    var guid = function () {
+    var guid = function() {
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000)
                 .toString(16)
@@ -113,10 +114,22 @@ geotab.addin.addinTemplate = function () {
             s4() + '-' + s4() + s4() + s4();
     };
 
-    var render = function () {
+    var render = function() {
         var elRemoveBtns,
             elCustomerIds,
+            elProviders,
             i;
+
+        var changeHandler = function(els, evt) {
+            var i;
+            for (i = 0; i < els.length; i++) {
+                els[i].addEventListener(evt, function(e) {
+                    e.target.parentNode.classList.remove('has-error');
+                    getProviderValues();
+                    render();
+                }, false);
+            }
+        }
 
         if (!providerSettings) {
             toggleAlert(elAlertError, "The addin is not supported in this version of the application");
@@ -129,20 +142,21 @@ geotab.addin.addinTemplate = function () {
         }
 
         elAccountSettings.innerHTML = providerSettings
-            .map(function (setting) {
+            .map(function(setting) {
                 return tmpl("accountSettingsTempl", {
                     customerId: setting.customerId || "",
                     fuelTransactionProvider: setting.fuelTransactionProvider,
                     lastRun: setting.lastRun === "0001-01-01" ? "Never" : setting.lastRun,
                     button: setting.button || "remove",
-                    id: guid()
+                    id: guid(),
+                    hasMultipleProviderSupport: hasMultipleProviderSupport
                 });
             })
             .join("");
 
         elRemoveBtns = document.querySelectorAll(".remove");
         for (i = 0; i < elRemoveBtns.length; i++) {
-            elRemoveBtns[i].addEventListener('click', function (e) {
+            elRemoveBtns[i].addEventListener('click', function(e) {
                 var tr = e.target;
 
                 while (tr.nodeName !== 'TR') {
@@ -157,65 +171,69 @@ geotab.addin.addinTemplate = function () {
             }, false);
         }
 
-        elCustomerIds = document.querySelectorAll(".customerId");
-        for (i = 0; i < elCustomerIds.length; i++) {
-            elCustomerIds[i].addEventListener('change', function (e) {
-                getProviderValues();
-                render();
-            }, false);
-        }
+        changeHandler(document.querySelectorAll(".customerId"), 'change');
+        changeHandler(document.querySelectorAll(".elProviders"), 'change');
 
         toggleVisible(elForm, true);
         focusOnLast();
     };
 
-    var load = function () {
+    var load = function() {
         toggleVisible(elForm, false);
         toggleAlert(elAlertInfo, "Loading...");
-        return api.call("Get", {
-                typeName: "SystemSettings"
-            },
-            function (result) {
-                systemSettings = result[0];
+        return api.multiCall([
+                ["Get", {
+                    typeName: "SystemSettings"
+                }],
+                ["GetVersion", {}]
+            ],
+            function(result) {
+                var version = result[1];
+                hasMultipleProviderSupport = parseInt(version.split('.')[2], 10) >= 1608;
+
+                systemSettings = result[0][0];
                 isLegacy = !!systemSettings.fuelTransactionImportSettings;
                 providerSettings = isLegacy ? [systemSettings.fuelTransactionImportSettings] : systemSettings.fuelTransactionImportSettingsList;
                 toggleAlert();
                 render();
             },
-            function (err) {
+            function(err) {
                 toggleAlert(elAlertError, err.toString());
             });
     };
 
-    var getProviderValues = function () {
+    var getProviderValues = function() {
         var i,
             customerIds = [],
+            providers = [],
             lastRuns = [],
             newProviderSettings,
             elCustomerIds = elAccountSettings.querySelectorAll('.customerId'),
+            elProviders = elAccountSettings.querySelectorAll('.provider'),
             elLastRuns = elAccountSettings.querySelectorAll('.lastRun');
 
         for (i = 0; i < elCustomerIds.length; i++) {
             customerIds.push(elCustomerIds[i].value);
+            providers.push(elProviders[i].value);
             lastRuns.push(elLastRuns[i].value);
         }
 
         newProviderSettings = customerIds
-            .map(function (id, i) {
+            .map(function(id, i) {
                 return {
                     customerId: id,
-                    fuelTransactionProvider: "Wex",
+                    fuelTransactionProvider: hasMultipleProviderSupport ? providers[i] : "Wex",
                     lastRun: lastRuns[i] === "Never" ? "0001-01-01" : lastRuns[i]
                 }
             })
-            .filter(function (setting) {
+            .filter(function(setting) {
                 return !!setting.customerId;
             });
 
         providerSettings = newProviderSettings;
     };
 
-    var hasDuplicate = function (providers) {
+    var hasDuplicate = function(providers) {
         var i,
             customerId,
             customerIds = {};
@@ -231,8 +249,21 @@ geotab.addin.addinTemplate = function () {
         return false;
     };
 
-    var save = function (e) {
+    var hasUnknownProvider = function(providers) {
+        var i;
+
+        for (i = 0; i < providers.length; i++) {
+            if (providers[i].fuelTransactionProvider === "Unknown") {
+                return i;
+            }
+        }
+
+        return -1;
+    };
+
+    var save = function(e) {
         var duplicate;
+        var unknownProvider;
 
         e.preventDefault();
 
@@ -241,6 +272,13 @@ geotab.addin.addinTemplate = function () {
         if (duplicate = hasDuplicate(providerSettings)) {
             toggleAlert(elAlertError, "Duplicate customer id");
             document.querySelector(".customerId[value='" + duplicate + "']").focus();
+            document.querySelector(".customerId[value='" + duplicate + "']").parentNode.classList.add('has-error')
+            return;
+        }
+
+        if ((unknownProvider = hasUnknownProvider(providerSettings)) > -1) {
+            toggleAlert(elAlertError, "Please select fuel card provider");
+            document.querySelectorAll(".provider")[unknownProvider].parentNode.classList.add('has-error')
             return;
         }
 
@@ -257,16 +295,16 @@ geotab.addin.addinTemplate = function () {
                 typeName: "SystemSettings",
                 entity: systemSettings
             },
-            function () {
+            function() {
                 showSaveSuccess();
             },
-            function (err) {
+            function(err) {
                 toggleAlert(elAlertError, err.toString());
             });
     };
 
     return {
-        initialize: function (geotabApi, pageState, initializeCallback) {
+        initialize: function(geotabApi, pageState, initializeCallback) {
             api = geotabApi;
             state = pageState;
 
@@ -285,7 +323,7 @@ geotab.addin.addinTemplate = function () {
             initializeCallback();
         },
 
-        focus: function () {
+        focus: function() {
             // events
             elSave.addEventListener("click", save, false);
             elReset.addEventListener("click", load, false);
@@ -293,7 +331,7 @@ geotab.addin.addinTemplate = function () {
             elContainer.style.display = "block";
         },
 
-        blur: function () {
+        blur: function() {
             // events
             elSave.removeEventListener("click", save, false);
             elReset.removeEventListener("click", load, false);

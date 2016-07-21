@@ -34,7 +34,7 @@
                     <span></span>
                 </div>
                 <div id="alertSuccess" style="display: none" class="alert alert-success"><span></span></div>
-                <div id="alertError" style="display: none" class="alert alert-error">Error: <span></span></div>
+                <div id="alertError" style="display: none" class="alert alert-danger">Error: <span></span></div>
             </div>
         </section>
 
@@ -67,8 +67,10 @@
         <tr class="accountSetting" id="<%=id%>">
             <td><input type="text" class="form-control customerId" required="required" value="<%=customerId%>" placeholder="Customer Id" title="Fuel card provider account number (must include leading zeros, no spaces or hyphens)"></td>
             <td>
-                <select class="form-control provider" disabled="disabled" title="The fuel card data provider">
-                    <option value="Unknown" <%= fuelTransactionProvider === 'Wex' ? 'selected="selected"' : '' %> >Unknown</option>
+                <select class="form-control provider" title="The fuel card data provider" <%= hasMultipleProviderSupport ? '' : 'disabled="disabled"' %>>
+                    <option value="Unknown" <%= fuelTransactionProvider === 'Unknown' ? 'selected="selected"' : '' %> >Unknown</option>
+                    <option value="Comdata" <%= fuelTransactionProvider === 'Comdata' ? 'selected="selected"' : '' %> >Comdata</option>
+                    <option value="Fuelman" <%= fuelTransactionProvider === 'Fuelman' ? 'selected="selected"' : '' %> >Fuelman</option>
                     <option value="Wex" <%= fuelTransactionProvider === 'Wex' ? 'selected="selected"' : '' %> >WEX</option>
                 </select>
             </td>
