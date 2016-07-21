@@ -20,7 +20,7 @@ Add the configuation below to the to the system setting -> addins section of the
             "url": "https://cdn.rawgit.com/Geotab/addin-fuel-transaction-provider/master/fuelTransactionProvider.html"
         }
     ],
-    "version": "2.0",
+    "version": "2.1.0",
     "key": "12345-MYAPIKEY"
 }
 ```
