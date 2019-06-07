@@ -213,7 +213,7 @@ geotab.addin.addinTemplate = function() {
             elLastRuns = elAccountSettings.querySelectorAll('.lastRun');
 
         for (i = 0; i < elCustomerIds.length; i++) {
-            customerIds.push(elCustomerIds[i].value);
+            customerIds.push(elCustomerIds[i].value.trim());
             providers.push(elProviders[i].value);
             lastRuns.push(elLastRuns[i].value);
         }
