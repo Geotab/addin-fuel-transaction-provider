@@ -27,7 +27,7 @@
     -moz-osx-font-smoothing: grayscale;
 }
 .app .icon-remove {
-    background-image: url("https://cdn.rawgit.com/Geotab/addin-fuel-transaction-provider/master/images/cross108.svg");
+    background-image: url("https://cdn.jsdelivr.net/gh/Geotab/addin-fuel-transaction-provider@master/images/cross108.svg");
 }
 
 .app .spinner {
