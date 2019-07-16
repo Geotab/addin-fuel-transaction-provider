@@ -5,12 +5,12 @@
     "name": "Fuel Transaction Provider (by Geotab)",
     "items": [
         {
-            "icon": "https://cdn.rawgit.com/Geotab/addin-fuel-transaction-provider/master/images/icon.png",
+            "icon": "https://cdn.jsdelivr.net/gh/Geotab/addin-fuel-transaction-provider@master/images/icon.png",
             "path": "EngineMaintenanceLink/",
             "menuName": {
                 "en": "Fuel Transaction Provider"
             },
-            "url": "https://cdn.rawgit.com/Geotab/addin-fuel-transaction-provider/master/fuelTransactionProvider.html"
+            "url": "https://cdn.jsdelivr.net/gh/Geotab/addin-fuel-transaction-provider@master/fuelTransactionProvider.html"
         }
     ],
     "version": "2.1",
