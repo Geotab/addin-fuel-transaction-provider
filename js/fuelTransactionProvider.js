@@ -118,6 +118,7 @@ geotab.addin.addinTemplate = function() {
         var elRemoveBtns,
             elCustomerIds,
             elProviders,
+            minDate = "0001-01-01"
             i;
 
         var changeHandler = function(els, evt) {
@@ -146,7 +147,7 @@ geotab.addin.addinTemplate = function() {
                 return tmpl("accountSettingsTempl", {
                     customerId: setting.customerId || "",
                     fuelTransactionProvider: setting.fuelTransactionProvider,
-                    lastRun: setting.lastRun === "0001-01-01" ? "Never" : setting.lastRun,
+                    lastRun: setting.substring(0, minDate.length) === minDate ? "Never" : setting.lastRun,
                     button: setting.button || "remove",
                     id: guid(),
                     hasMultipleProviderSupport: hasMultipleProviderSupport
@@ -223,7 +224,7 @@ geotab.addin.addinTemplate = function() {
                 return {
                     customerId: id,
                     fuelTransactionProvider: hasMultipleProviderSupport ? providers[i] : "Wex",
-                    lastRun: lastRuns[i] === "Never" ? "0001-01-01" : lastRuns[i]
+                    lastRun: lastRuns[i] === "Never" ? "0001-01-01T00:00:00.000Z" : lastRuns[i]
                 }
             })
             .filter(function(setting) {
