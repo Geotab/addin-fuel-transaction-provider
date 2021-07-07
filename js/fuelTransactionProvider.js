@@ -285,23 +285,26 @@ geotab.addin.addinTemplate = function() {
 
         toggleAlert(elAlertInfo, "Saving...");
 
-        if (isLegacy) {
-            // running older version of MyGeotab
-            systemSettings.fuelTransactionImportSettings = !providerSettings.length ? getEmptyProvider() : providerSettings[0]
-        } else {
-            systemSettings.fuelTransactionImportSettingsList = providerSettings;
-        }
-
-        return api.call("Set", {
-                typeName: "SystemSettings",
-                entity: systemSettings
-            },
-            function() {
+        return api.call("Get", {
+            "typeName": "SystemSettings"
+        }, function (result) {
+            if (isLegacy) {
+                // running older version of MyGeotab
+                result[0].fuelTransactionImportSettings = !providerSettings.length ? getEmptyProvider() : providerSettings[0]
+            } else {
+                result[0].fuelTransactionImportSettingsList = providerSettings;
+            }
+            api.call("Set", {
+                "typeName": "SystemSettings",
+                "entity": result[0]
+            }, function () {
                 showSaveSuccess();
-            },
-            function(err) {
+            }, function (err) {
                 toggleAlert(elAlertError, err.toString());
             });
+        }, function (e) {
+            toggleAlert(elAlertError, e.toString());
+        });
     };
 
     return {
