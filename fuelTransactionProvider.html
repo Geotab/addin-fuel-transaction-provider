@@ -5,7 +5,7 @@
     <title>Fuel Transaction Provider (by Geotab)</title>
     <link href="https://cdn.jsdelivr.net/gh/Geotab/addin-fuel-transaction-provider@master/css/bootstrap.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/Geotab/addin-fuel-transaction-provider@master/css/fuelTransactionProvider.css" rel="stylesheet">
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/Geotab/addin-fuel-transaction-provider@master/js/fuelTransactionProvider.js"></script>
+    <script type="text/javascript" src="./js/fuelTransactionProvider.js"></script>
 </head>
 
 <body>
@@ -67,11 +67,12 @@
         <tr class="accountSetting" id="<%=id%>">
             <td><input type="text" class="form-control customerId" required="required" value="<%=customerId%>" placeholder="Customer Id" title="Fuel card provider account number (must include leading zeros, no spaces or hyphens)"></td>
             <td>
-                <select class="form-control provider" title="The fuel card data provider" <%= hasMultipleProviderSupport ? '' : 'disabled="disabled"' %>>
+                <select class="form-control provider" title="The fuel card data provider" <%= '' %>>
                     <option value="Unknown" <%= fuelTransactionProvider === 'Unknown' ? 'selected="selected"' : '' %> >Unknown</option>
                     <option value="Comdata" <%= fuelTransactionProvider === 'Comdata' ? 'selected="selected"' : '' %> >Comdata</option>
                     <option value="Fuelman" <%= fuelTransactionProvider === 'Fuelman' ? 'selected="selected"' : '' %> >Fuelman</option>
                     <option value="Wex" <%= fuelTransactionProvider === 'Wex' ? 'selected="selected"' : '' %> >WEX</option>
+                    <option value="WexCanada" <%= fuelTransactionProvider === 'WexCanada' ? 'selected="selected"' : '' %> >WEX Canada</option>
                     <option value="GFN" <%= fuelTransactionProvider === 'GFN' ? 'selected="selected"' : '' %> >GFN</option>
                 </select>
             </td>
