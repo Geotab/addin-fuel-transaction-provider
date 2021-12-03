@@ -22,7 +22,6 @@ geotab.addin.addinTemplate = function() {
     var systemSettings;
     var providerSettings;
     var isLegacy;
-    var hasMultipleProviderSupport;
 
     var tmpl = (function() {
         var cache = {};
@@ -149,8 +148,7 @@ geotab.addin.addinTemplate = function() {
                     fuelTransactionProvider: setting.fuelTransactionProvider,
                     lastRun: setting.lastRun.substring(0, minDate.length) === minDate ? "Never" : setting.lastRun,
                     button: setting.button || "remove",
-                    id: guid(),
-                    hasMultipleProviderSupport: hasMultipleProviderSupport
+                    id: guid()
                 });
             })
             .join("");
@@ -190,7 +188,6 @@ geotab.addin.addinTemplate = function() {
             ],
             function(result) {
                 var version = result[1];
-                hasMultipleProviderSupport = parseInt(version.split('.')[2], 10) >= 1608;
 
                 systemSettings = result[0][0];
                 isLegacy = !!systemSettings.fuelTransactionImportSettings;
@@ -223,7 +220,7 @@ geotab.addin.addinTemplate = function() {
             .map(function(id, i) {
                 return {
                     customerId: id,
-                    fuelTransactionProvider: hasMultipleProviderSupport ? providers[i] : "Wex",
+                    fuelTransactionProvider: providers[i],
                     lastRun: lastRuns[i] === "Never" ? "0001-01-01T00:00:00.000Z" : lastRuns[i]
                 }
             })
